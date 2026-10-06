@@ -1,6 +1,6 @@
 # Document intake automation (n8n + Claude)
 
-Work in progress (Build 1, started 6 Oct 2026). Results will be added once the workflow runs end to end.
+Work in progress (Build 1, started 6 Oct 2026). The core flow runs end to end: on 7 Oct all 30 test documents passed. Still to do: start on its own when a file arrives, write to a spreadsheet instead of CSV files, and send alerts.
 
 ## The problem
 
@@ -89,6 +89,7 @@ Status:
 - Against a stand-in for the Claude API that returns the expected answers, the whole flow ran in n8n 2.42.3 and 30 of 30 documents passed. This tests everything except Claude's reading.
 - First run with the real API (6 Oct, 7 of the 30 documents, including a scan, a phone photo and 2 planted problems): 7 of 7 passed, 105 of 105 fields and 23 of 23 line items correct, both problems flagged with no false alarms, USD 0.0315 in all. Details in [results/2026-10-06-first-run](results/2026-10-06-first-run/).
 - First full run (7 Oct, all 30 documents): 7 calls timed out because the first version sent the uploads in parallel. Every document Claude did return was correct (23 of 23). The workflow now sends one document at a time with retries. Details in [results/2026-10-07-run-with-timeouts](results/2026-10-07-run-with-timeouts/).
+- Full run with the current version (7 Oct, all 30 documents): 30 of 30 passed, 450 of 450 fields and 140 of 140 line items correct, all 11 planted problems flagged with no false alarms, and no failed calls. USD 0.1425 in all (about USD 0.0048 per document), under 2 minutes. Details in [results/2026-10-07-full-run](results/2026-10-07-full-run/).
 
 ## Built with
 

@@ -7,6 +7,8 @@ All 30 test documents, with the first version of the core flow.
 - Every document Claude did return was correct: all 23 passed with every field and line item right.
 - Cost: USD 0.1108 for the 23 documents that went through.
 
+The same version run a second time gave the same result: 23 of 30 passed and 7 calls failed (USD 0.1117).
+
 Cause: n8n's HTTP Request node "batching" option staggers the start of each call by a second but doesn't wait for the previous call to finish, so up to 30 uploads were in flight at once.
 
 Fix, in the next version of the workflow:

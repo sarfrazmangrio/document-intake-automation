@@ -1,0 +1,141 @@
+﻿file,line_no,description,quantity,unit_price,amount
+INV-01.pdf,1,"File folders, letter, 100",12,15.6,187.2
+INV-01.pdf,2,"Highlighters, 6 colors",12,6.8,81.6
+INV-01.pdf,3,"Whiteboard markers, 8 pack",4,11.4,45.6
+INV-01.pdf,4,"Envelopes #10, box of 500",1,27.9,27.9
+INV-01.pdf,5,"Desk fan, 12 in",2,29.99,59.98
+INV-02.pdf,1,Stretch film 18 in x 1500 ft,12,1950,23400
+INV-02.pdf,2,"Corrugated box 18x14x12 in, 5-ply",250,310,77500
+INV-02.pdf,3,"Printed mailer bags 12x16, 100",12,2300,27600
+INV-02.pdf,4,"Corrugated box 12x10x8 in, 3-ply",200,145,29000
+INV-03.pdf,1,Wireless keyboard,5,49,245
+INV-03.pdf,2,"Paper shredder, cross-cut",1,149,149
+INV-03.pdf,3,"Laminating pouches, 100",5,21.3,106.5
+INV-03.pdf,4,"Tissue boxes, 12 pack",5,18.6,93
+INV-03.pdf,5,"Trash bags 30 gal, 50",5,13.45,67.25
+INV-03.pdf,6,"Label maker tape, 2 pack",3,16.8,50.4
+INV-03.pdf,7,"Index dividers, 8 tab",5,5.1,25.5
+INV-03.pdf,8,"Correction tape, 10 pack",5,8.6,43
+INV-03.pdf,9,"Highlighters, 6 colors",1,6.8,6.8
+INV-03.pdf,10,"Stapler, heavy duty",2,24.5,49
+INV-03.pdf,11,"USB-C hub, 7-port",2,42,84
+INV-03.pdf,12,"Ring binders 2 in, 4 pack",1,22.4,22.4
+INV-03.pdf,13,"Binder clips, assorted 60",1,7.25,7.25
+INV-03.pdf,14,Printing calculator,5,64.95,324.75
+INV-03.pdf,15,Ergonomic wireless mouse,5,34.99,174.95
+INV-03.pdf,16,LED desk lamp,2,45,90
+INV-03.pdf,17,"Envelopes #10, box of 500",5,27.9,139.5
+INV-03.pdf,18,"First aid kit, office",2,36.75,73.5
+INV-03.pdf,19,"Clipboards, 5 pack",1,14.25,14.25
+INV-03.pdf,20,"Hand sanitizer, 1 L",5,7.9,39.5
+INV-03.pdf,21,"Desk fan, 12 in",5,29.99,149.95
+INV-03.pdf,22,"Cable ties, 100 pack",3,4.99,14.97
+INV-03.pdf,23,"Sticky notes 3x3, yellow, 12 pack",5,9.75,48.75
+INV-03.pdf,24,"A4 copy paper, 500 sheets",3,6.49,19.47
+INV-03.pdf,25,"Desk organizer, mesh",5,18.2,91
+INV-03.pdf,26,"A3 printer paper, 250 sheets",5,19.99,99.95
+INV-03.pdf,27,"Ballpoint pens, box of 50",5,12.99,64.95
+INV-03.pdf,28,"File folders, letter, 100",2,15.6,31.2
+INV-03.pdf,29,"Coffee filters, 500",3,9.3,27.9
+INV-03.pdf,30,Black toner cartridge 26A,3,89,267
+INV-04.pdf,1,"Stapler, heavy duty",12,24.5,294
+INV-04.pdf,2,"Sticky notes 3x3, yellow, 12 pack",6,9.75,58.5
+INV-04.pdf,3,"Highlighters, 6 colors",4,6.8,27.2
+INV-04.pdf,4,"Hand sanitizer, 1 L",5,7.9,39.5
+INV-04.pdf,5,Printing calculator,12,64.95,779.4
+INV-04.pdf,6,"Envelopes #10, box of 500",12,27.9,334.8
+INV-05.pdf,1,Inspection exam fee,1,260,260
+INV-05.pdf,2,Detention time (hours),4.5,85,382.5
+INV-05.pdf,3,Pallet storage (pallet-weeks),6,14.5,87
+INV-05.pdf,4,Fuel surcharge,1,92.4,92.4
+INV-05.pdf,5,"Container drayage, 40 ft, port to DC",1,685,685
+INV-06.pdf,1,"Corrugated box 18x14x12 in, 5-ply",200,310,62000
+INV-06.pdf,2,"Printed mailer bags 12x16, 100",8,2300,18400
+INV-06.pdf,3,"Pallet wrap, black",4,2150,8600
+INV-07.pdf,1,"Envelope printing, 500 pcs",2,4750,9500
+INV-07.pdf,2,"Business cards, 350 gsm, 500 pcs",3,3500,10500
+INV-07.pdf,3,"Vinyl sticker labels, 1,000 pcs",2,4200,8400
+INV-08.pdf,1,Pallet storage (pallet-weeks),12,14.5,174
+INV-08.pdf,2,Chassis rental (days),1,38,38
+INV-08.pdf,3,Inspection exam fee,1,260,260
+INV-08.pdf,4,Customs clearance filing,1,175,175
+INV-09.pdf,1,"Corrugated box 12x10x8 in, 3-ply",1200,145,147000
+INV-09.pdf,2,"Printed mailer bags 12x16, 100",4,2300,9200
+INV-09.pdf,3,"Pallet wrap, black",4,2150,8600
+INV-09.pdf,4,"Corrugated box 18x14x12 in, 5-ply",50,310,15500
+INV-09.pdf,5,Stretch film 18 in x 1500 ft,10,1950,19500
+INV-10.pdf,1,"Pallet wrap, black",2,2150,4300
+INV-10.pdf,2,Stretch film 18 in x 1500 ft,5,1950,9750
+INV-10.pdf,3,"Kraft paper roll, 36 in",12,3200,38400
+INV-10.pdf,4,Bubble wrap roll 1 m x 50 m,10,2450,24500
+INV-11.pdf,1,"Envelope printing, 500 pcs",1,4750,4750
+INV-11.pdf,2,"Vinyl sticker labels, 1,000 pcs",3,4200,12600
+INV-11.pdf,3,"A2 posters, glossy, 50 pcs",1,5250,5250
+INV-11.pdf,4,"A5 flyers, 130 gsm, 2,000 pcs",2,14000,28000
+INV-12.pdf,1,Detention time (hours),2,85,170
+INV-12.pdf,2,Chassis rental (days),4.5,38,171
+INV-12.pdf,3,Customs clearance filing,1,175,175
+INV-13.pdf,1,"Desk fan, 12 in",10,29.99,299.9
+INV-13.pdf,2,"Label maker tape, 2 pack",1,16.8,16.8
+INV-13.pdf,3,Wireless keyboard,2,49,98
+INV-13.pdf,4,"Sticky notes 3x3, yellow, 12 pack",10,9.75,97.5
+INV-13.pdf,5,"Correction tape, 10 pack",2,8.6,17.2
+INV-13.pdf,6,"Tissue boxes, 12 pack",1,18.6,18.6
+INV-13.pdf,7,"Whiteboard markers, 8 pack",6,11.4,68.4
+INV-14.pdf,1,Chassis rental (days),4.5,38,171
+INV-14.pdf,2,Detention time (hours),12,85,1020
+INV-14.pdf,3,"Container drayage, 40 ft, port to DC",1,685,685
+INV-14.pdf,4,Inspection exam fee,1,260,260
+INV-14.pdf,5,Pallet storage (pallet-weeks),6,14.5,87
+INV-14.pdf,6,Customs clearance filing,1,175,175
+INV-15.pdf,1,"Envelope printing, 500 pcs",1,4750,4750
+INV-15.pdf,2,"Letterheads, 100 gsm, 1,000 pcs",1,7500,7500
+INV-15.pdf,3,"Tri-fold brochures, 1,000 pcs",3,18500,55500
+INV-15.pdf,4,"Vinyl sticker labels, 1,000 pcs",2,4200,8400
+INV-15.pdf,5,"A5 flyers, 130 gsm, 2,000 pcs",3,14000,42000
+INV-16.pdf,1,"Letterheads, 100 gsm, 1,000 pcs",1,7500,7500
+INV-16.pdf,2,"Vinyl sticker labels, 1,000 pcs",3,4200,12600
+INV-16.pdf,3,"A2 posters, glossy, 50 pcs",1,5250,5250
+INV-17.pdf,1,"Laminating pouches, 100",4,21.3,85.2
+INV-17.pdf,2,"Stapler, heavy duty",12,24.5,294
+INV-17.pdf,3,"Ballpoint pens, box of 50",1,12.99,12.99
+INV-17.pdf,4,"Hand sanitizer, 1 L",3,7.9,23.7
+INV-18.pdf,1,Pallet storage (pallet-weeks),2,14.5,29
+INV-18.pdf,2,Detention time (hours),6.5,85,552.5
+INV-18.pdf,3,Fuel surcharge,1,92.4,92.4
+INV-18.pdf,4,Customs clearance filing,1,175,175
+INV-18.pdf,5,Chassis rental (days),4.5,38,171
+INV-19.pdf,1,"Envelope printing, 500 pcs",1,4750,4750
+INV-19.pdf,2,"Letterheads, 100 gsm, 1,000 pcs",1,7500,7500
+INV-19.pdf,3,"Tri-fold brochures, 1,000 pcs",3,18500,55500
+INV-19.pdf,4,"Vinyl sticker labels, 1,000 pcs",2,4200,8400
+INV-19.pdf,5,"A5 flyers, 130 gsm, 2,000 pcs",3,14000,42000
+INV-20.pdf,1,"Pallet wrap, black",5,2150,10750
+INV-20.pdf,2,"Air pillows, bag of 500",4,1650,6600
+INV-20.pdf,3,"Corrugated box 18x14x12 in, 5-ply",200,310,62000
+INV-20.pdf,4,"Edge protectors, 50",8,1275,10200
+INV-20.pdf,5,Bubble wrap roll 1 m x 50 m,8,2450,19600
+INV-20.pdf,6,"Shipping labels 4x6, 500",8,1420,11360
+R-01.pdf,1,Basmati rice 5 kg,1,1850,1850
+R-01.pdf,2,Cooking oil 3 L,1,1495,1495
+R-01.pdf,3,"Eggs, dozen",2,380,760
+R-01.pdf,4,Milk 1 L,3,260,780
+R-01.pdf,5,"Green tea, 25 bags",1,425,425
+R-02.pdf,1,Oat milk latte,2,5.25,10.5
+R-02.pdf,2,Blueberry muffin,1,3.75,3.75
+R-02.pdf,3,"Cold brew, large",1,4.95,4.95
+R-03.jpg,1,Atta flour 10 kg,1,1320,1320
+R-03.jpg,2,Sugar 2 kg,1,330,330
+R-03.jpg,3,Lentils (masoor) 1 kg,2,410,820
+R-03.jpg,4,Dish soap 500 ml,1,245,245
+R-04.pdf,1,Oat milk latte,2,5.25,10.5
+R-04.pdf,2,Blueberry muffin,1,3.75,3.75
+R-04.pdf,3,"Cold brew, large",1,4.95,4.95
+R-05.pdf,1,Americano,1,3.5,3.5
+R-05.pdf,2,Avocado toast,1,9.25,9.25
+R-06.pdf,1,Chicken 1 kg,2,780,1560
+R-06.pdf,2,Tomatoes 1 kg,1,220,220
+R-06.pdf,3,Yogurt 1 kg,1,340,340
+R-07.pdf,1,Cappuccino,1,4.75,4.75
+R-07.pdf,2,Chai latte,1,4.95,4.95
+R-07.pdf,3,Croissant,2,3.4,6.8
