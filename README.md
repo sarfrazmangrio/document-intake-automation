@@ -63,10 +63,14 @@ Tests for the check itself: `python -m pytest -q`.
 
 ## Running n8n
 
-n8n runs in Docker on the same computer: `n8n/docker-compose.yml`, then `docker compose up -d`. The settings:
+n8n runs in Docker on the same computer. From the `n8n` folder, run `docker compose up -d`, then open http://localhost:5678 and create the owner account. The settings in `n8n/docker-compose.yml`:
 - switch on the local-folder trigger;
 - keep the command-execution node blocked;
 - limit file access to the mounted `files` folder.
+
+Tested with n8n 2.42.3 (Community Edition) on Docker Desktop 4.94 for Windows. On Windows, Docker Desktop also needs:
+- the Virtual Machine Platform Windows feature;
+- CPU virtualization (Intel VT-x or AMD-V) switched on in the BIOS/UEFI.
 
 ## Built with
 
