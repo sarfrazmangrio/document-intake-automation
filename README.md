@@ -77,18 +77,18 @@ Tested with n8n 2.42.3 (Community Edition) on Docker Desktop 4.94 for Windows. O
 `n8n/document_intake_core.json` is the workflow to import. It is assembled from the JavaScript in `n8n/src` by `python tools/build_workflow.py`, so edit the sources, not the JSON.
 
 1. Reads every PDF, JPG and PNG in `files/intake`.
-2. Sends each file to Claude (Haiku 4.5), one at a time, as a document or image block. Structured outputs make every reply follow one schema with the 15 fields in the output contract plus the line items. Anything not printed comes back empty.
+2. Sends each file to Claude (Haiku 4.5) as a document or image block. A loop sends one document at a time, so each call finishes before the next starts, with up to 3 tries per document. Structured outputs make every reply follow one schema with the 15 fields in the output contract plus the line items. Anything not printed comes back empty.
 3. Runs the checks (required fields, dates, arithmetic, duplicates, expired certificates) and marks each document OK or Needs review.
 4. Writes `documents.csv`, `lines.csv` and `run_log.csv` (tokens, cost and any error per document) to `files/output`.
 
-A call that fails becomes a Needs review row flagged `extraction_failed`, and the error goes to the run log; the other documents carry on.
+A call that still fails after 3 tries becomes a Needs review row flagged `extraction_failed`, and the error goes to the run log; the other documents carry on.
 
 The API key lives in an n8n credential (Header Auth, name `x-api-key`), never in the workflow file.
 
 Status:
 - Against a stand-in for the Claude API that returns the expected answers, the whole flow ran in n8n 2.42.3 and 30 of 30 documents passed. This tests everything except Claude's reading.
 - First run with the real API (6 Oct, 7 of the 30 documents, including a scan, a phone photo and 2 planted problems): 7 of 7 passed, 105 of 105 fields and 23 of 23 line items correct, both problems flagged with no false alarms, USD 0.0315 in all. Details in [results/2026-10-06-first-run](results/2026-10-06-first-run/).
-- Next: the other 23 documents.
+- First full run (7 Oct, all 30 documents): 7 calls timed out because the first version sent the uploads in parallel. Every document Claude did return was correct (23 of 23). The workflow now sends one document at a time with retries. Details in [results/2026-10-07-run-with-timeouts](results/2026-10-07-run-with-timeouts/).
 
 ## Built with
 

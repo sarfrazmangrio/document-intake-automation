@@ -38,7 +38,9 @@ def build() -> dict:
         node("Read intake files", "n8n-nodes-base.readWriteFile", 1.1, 220, 300,
              {"fileSelector": INTAKE, "options": {}}),
         code("Build Claude requests", 440, 300, "build_requests.js"),
-        node("Claude: extract fields", "n8n-nodes-base.httpRequest", 4.2, 660, 300, {
+        # One document per pass, so each call finishes before the next starts.
+        node("One document at a time", "n8n-nodes-base.splitInBatches", 3, 660, 300, {"batchSize": 1, "options": {}}),
+        node("Claude: extract fields", "n8n-nodes-base.httpRequest", 4.2, 880, 440, {
             "method": "POST",
             "url": "={{ $json.api_url }}",
             "authentication": "genericCredentialType",
@@ -48,10 +50,10 @@ def build() -> dict:
             "sendBody": True,
             "specifyBody": "json",
             "jsonBody": "={{ JSON.stringify($json.request) }}",
-            # one document at a time, one second apart; a failed call becomes an "extraction_failed" row
-            "options": {"batching": {"batch": {"batchSize": 1, "batchInterval": 1000}}, "timeout": 120000},
-        }, onError="continueRegularOutput"),
-        code("Checks and rows", 880, 300, "checks.js"),
+            "options": {"timeout": 60000},
+        # up to 3 tries, 5 seconds apart; a call that still fails becomes an "extraction_failed" row
+        }, retryOnFail=True, maxTries=3, waitBetweenTries=5000, onError="continueRegularOutput"),
+        code("Checks and rows", 1100, 300, "checks.js"),
     ]
     outputs = [("Document rows", "document_rows.js", "documents.csv", 120),
                ("Line rows", "line_rows.js", "lines.csv", 300),
@@ -59,17 +61,20 @@ def build() -> dict:
     connections = {
         "Run on the intake folder": {"main": [[{"node": "Read intake files", "type": "main", "index": 0}]]},
         "Read intake files": {"main": [[{"node": "Build Claude requests", "type": "main", "index": 0}]]},
-        "Build Claude requests": {"main": [[{"node": "Claude: extract fields", "type": "main", "index": 0}]]},
-        "Claude: extract fields": {"main": [[{"node": "Checks and rows", "type": "main", "index": 0}]]},
+        "Build Claude requests": {"main": [[{"node": "One document at a time", "type": "main", "index": 0}]]},
+        # output 0 ("done") carries every reply once the loop ends; output 1 ("loop") the next document
+        "One document at a time": {"main": [[{"node": "Checks and rows", "type": "main", "index": 0}],
+                                            [{"node": "Claude: extract fields", "type": "main", "index": 0}]]},
+        "Claude: extract fields": {"main": [[{"node": "One document at a time", "type": "main", "index": 0}]]},
         "Checks and rows": {"main": [[{"node": name, "type": "main", "index": 0} for name, *_ in outputs]]},
     }
     for name, source, file_name, y in outputs:
         convert, write = f"{name}: CSV", f"Save {file_name}"
         nodes += [
-            code(name, 1100, y, source),
-            node(convert, "n8n-nodes-base.convertToFile", 1.1, 1320, y,
+            code(name, 1320, y, source),
+            node(convert, "n8n-nodes-base.convertToFile", 1.1, 1540, y,
                  {"operation": "csv", "options": {"fileName": file_name}}),
-            node(write, "n8n-nodes-base.readWriteFile", 1.1, 1540, y,
+            node(write, "n8n-nodes-base.readWriteFile", 1.1, 1760, y,
                  {"operation": "write", "fileName": f"{OUTPUT_DIR}/{file_name}", "dataPropertyName": "data", "options": {}}),
         ]
         connections[name] = {"main": [[{"node": convert, "type": "main", "index": 0}]]}

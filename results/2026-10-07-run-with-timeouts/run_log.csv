@@ -1,0 +1,31 @@
+﻿file,model,input_tokens,output_tokens,cost_usd,error
+C-01.pdf,claude-haiku-4-5-20251001,3331,135,0.004006,
+C-02.pdf,claude-haiku-4-5-20251001,3340,160,0.00414,
+C-03.pdf,claude-haiku-4-5-20251001,3329,132,0.003989,
+INV-01.pdf,claude-haiku-4-5-20251001,3327,282,0.004737,
+INV-02.pdf,claude-haiku-4-5-20251001,3407,298,0.004897,
+INV-03.pdf,claude-haiku-4-5-20251001,5491,1026,0.010621,
+INV-04.pdf,claude-haiku-4-5-20251001,3348,310,0.004898,
+INV-05.pdf,claude-haiku-4-5-20251001,3322,271,0.004677,
+INV-06.pdf,claude-haiku-4-5-20251001,3358,241,0.004563,
+INV-07.pdf,,,,,timeout of 120000ms exceeded
+INV-08.pdf,claude-haiku-4-5-20251001,3288,231,0.004443,
+INV-09.pdf,claude-haiku-4-5-20251001,3432,329,0.005077,
+INV-10.pdf,,,,,timeout of 120000ms exceeded
+INV-11.pdf,claude-haiku-4-5-20251001,3352,257,0.004637,
+INV-12.pdf,claude-haiku-4-5-20251001,3266,198,0.004256,
+INV-13.pdf,claude-haiku-4-5-20251001,3365,338,0.005055,
+INV-14.pdf,,,,,timeout of 120000ms exceeded
+INV-15.pdf,claude-haiku-4-5-20251001,3386,296,0.004866,
+INV-16.pdf,,,,,timeout of 120000ms exceeded
+INV-17.pdf,claude-haiku-4-5-20251001,3300,246,0.00453,
+INV-18.pdf,claude-haiku-4-5-20251001,3318,268,0.004658,
+INV-19.pdf,claude-haiku-4-5-20251001,3112,296,0.004592,
+INV-20.pdf,,,,,socket hang up
+R-01.pdf,claude-haiku-4-5-20251001,3322,261,0.004627,
+R-02.pdf,claude-haiku-4-5-20251001,3269,194,0.004239,
+R-03.jpg,claude-haiku-4-5-20251001,3075,287,0.00451,
+R-04.pdf,,,,,timeout of 120000ms exceeded
+R-05.pdf,,,,,timeout of 120000ms exceeded
+R-06.pdf,claude-haiku-4-5-20251001,3273,245,0.004498,
+R-07.pdf,claude-haiku-4-5-20251001,3125,233,0.00429,

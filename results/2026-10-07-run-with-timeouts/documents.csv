@@ -1,0 +1,31 @@
+﻿file,doc_type,issuer,doc_number,doc_date,due_date,effective_date,expiry_date,currency,counterparty,policy_number,coverage_limit,subtotal,tax_rate_percent,tax_amount,total,status,flags
+C-01.pdf,certificate,Northstar Mutual Insurance Co.,NM-COI-2026-0418,2026-03-12,,2026-04-01,2027-03-31,USD,Harbor Line Freight,GL-77310245,1000000,,,,,OK,
+C-02.pdf,certificate,Northstar Mutual Insurance Co.,NM-COI-2025-0977,2025-08-20,,2025-09-01,2026-08-31,USD,Kestrel Packaging Ltd.,GL-66120873,500000,,,,,Needs review,certificate_expired
+C-03.pdf,certificate,Northstar Mutual Insurance Co.,NM-COI-2026-0533,2026-05-07,,2026-05-15,2027-05-14,USD,Saffron Print Studio,,1000000,,,,,Needs review,missing_required_field
+INV-01.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0412,2026-02-17,2026-03-19,,,USD,Brightside Dental Group,,,402.28,8.25,33.19,435.47,OK,
+INV-02.pdf,invoice,KESTREL PACKAGING LTD.,KPL/INV/1187,2026-02-13,2026-02-28,,,PKR,Meridian Retail (Pvt.) Ltd.,,,157500,18,28350,185850,OK,
+INV-03.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0413,2026-02-24,2026-03-26,,,USD,Brightside Dental Group,,,2620.69,8.25,216.21,2836.9,OK,
+INV-04.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0414,2026-03-03,2026-04-02,,,USD,Summit Legal Partners,,,1553.4,8.25,128.16,1681.56,Needs review,lines_sum_to_subtotal
+INV-05.pdf,invoice,Harbor Line Freight,HLF-88213,2026-03-05,2026-04-04,,,USD,Greenleaf Pharmacy,,,1506.9,,,1506.9,OK,
+INV-06.pdf,invoice,KESTREL PACKAGING LTD.,KPL/INV/1188,2026-03-28,2026-03-14,,,PKR,Crescent Foods,,,89000,18,16020,105020,Needs review,due_before_invoice
+INV-07.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+INV-08.pdf,invoice,HARBOR LINE FREIGHT,HLF-88220,2026-03-12,2026-04-11,,,USD,Nova Home Electronics,,,647,,,647,OK,
+INV-09.pdf,invoice,KESTREL PACKAGING LTD.,KPL/INV/1189,2026-03-16,2026-03-31,,,PKR,Meridian Retail (Pvt.) Ltd.,,,199800,18,35964,235764,Needs review,line_math
+INV-10.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+INV-11.pdf,invoice,Saffron Print Studio,SPS-2026-0032,2026-03-20,2026-04-04,,,PKR,Atlas Garments,,,50600,16,8096,58696,OK,
+INV-12.pdf,invoice,Harbor Line Freight,,2026-03-23,2026-04-22,,,USD,Pacific Tile Imports,,,516,,,516,Needs review,missing_required_field
+INV-13.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0415,2026-03-25,2026-04-24,,,USD,Summit Legal Partners,,,616.4,8.25,50.85,667.25,OK,
+INV-14.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+INV-15.pdf,invoice,Saffron Print Studio,SPS-2026-0033,2026-03-30,2026-04-14,,,PKR,Crescent Foods,,,118150,16,18904,137054,OK,
+INV-16.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+INV-17.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0416,2026-04-06,2026-05-06,,,USD,Summit Legal Partners,,,415.89,8.25,34.31,450.2,OK,
+INV-18.pdf,invoice,HARBOR LINE FREIGHT,HLF-88241,2026-04-08,2026-05-08,,,USD,Greenleaf Pharmacy,,,1019.9,,,1019.9,OK,
+INV-19.pdf,invoice,Saffron Print Studio,SPS-2026-0033,2026-03-30,2026-04-14,,,PKR,Crescent Foods,,,118150,16,18904,137054,Needs review,duplicate_document
+INV-20.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+R-01.pdf,receipt,BRIGHT BASKET GROCERS,BB-104233,2026-10-05,,,,PKR,,,,5310,18,955.8,6265.8,OK,
+R-02.pdf,receipt,JUNIPER LANE CAFE,4817,2026-10-03,,,,USD,,,,19.2,8.25,1.58,20.78,OK,
+R-03.jpg,receipt,BRIGHT BASKET GROCERS,BB-104251,2026-10-06,,,,PKR,,,,2715,18,488.7,3203.7,OK,
+R-04.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+R-05.pdf,,,,,,,,,,,,,,,,Needs review,extraction_failed
+R-06.pdf,receipt,BRIGHT BASKET GROCERS,BB-104260,2026-10-06,,,,PKR,,,,2120,18,381.6,2601.6,Needs review,total_equals_subtotal_plus_tax
+R-07.pdf,receipt,JUNIPER LANE CAFE,4830,2026-10-04,,,,USD,,,,16.5,8.25,1.36,17.86,OK,

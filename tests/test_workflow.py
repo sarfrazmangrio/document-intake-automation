@@ -24,7 +24,12 @@ def test_workflow_settings():
     nodes = {n["name"]: n for n in wf["nodes"]}
     http = nodes["Claude: extract fields"]
     assert http["onError"] == "continueRegularOutput"
-    assert http["parameters"]["options"]["batching"]["batch"]["batchSize"] == 1
+    # n8n retries a node only when its first item failed, so the loop must feed it one document at a time
+    assert http["retryOnFail"] is True and http["maxTries"] == 3
+    assert nodes["One document at a time"]["parameters"]["batchSize"] == 1
+    loop = wf["connections"]["One document at a time"]["main"]
+    assert loop[0][0]["node"] == "Checks and rows" and loop[1][0]["node"] == "Claude: extract fields"
+    assert wf["connections"]["Claude: extract fields"]["main"][0][0]["node"] == "One document at a time"
     assert nodes["Read intake files"]["parameters"]["fileSelector"].startswith("/files/intake/")
     assert all(n["parameters"]["fileName"].startswith("/files/output/")
                for n in wf["nodes"] if n["parameters"].get("operation") == "write")

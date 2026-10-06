@@ -40,13 +40,27 @@
       }
     },
     {
+      "id": "0e87c472-6bb8-52ba-9bd8-3203330beec9",
+      "name": "One document at a time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        660,
+        300
+      ],
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      }
+    },
+    {
       "id": "ae28577d-b935-5ba4-83d0-c6f2aadb2592",
       "name": "Claude: extract fields",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        660,
-        300
+        880,
+        440
       ],
       "parameters": {
         "method": "POST",
@@ -66,15 +80,12 @@
         "specifyBody": "json",
         "jsonBody": "={{ JSON.stringify($json.request) }}",
         "options": {
-          "batching": {
-            "batch": {
-              "batchSize": 1,
-              "batchInterval": 1000
-            }
-          },
-          "timeout": 120000
+          "timeout": 60000
         }
       },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 5000,
       "onError": "continueRegularOutput"
     },
     {
@@ -83,11 +94,11 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        880,
+        1100,
         300
       ],
       "parameters": {
-        "jsCode": "// Code node \"Checks and rows\" (run once for all items).\n// Reads Claude's replies, runs the checks on every document and builds the sheet rows.\n// Input: the replies from \"Claude: extract fields\", in the same order as \"Build Claude requests\".\n// Output: one item per document with { row, lines, log }.\n\nconst DOC_COLUMNS = ['file', 'doc_type', 'issuer', 'doc_number', 'doc_date', 'due_date', 'effective_date', 'expiry_date',\n  'currency', 'counterparty', 'policy_number', 'coverage_limit', 'subtotal', 'tax_rate_percent', 'tax_amount', 'total',\n  'status', 'flags'];\nconst MONEY_TOLERANCE = 0.011; // amounts are printed to 2 decimals\nconst PRICES_PER_MTOK = { 'claude-haiku-4-5': [1.0, 5.0] }; // USD per million tokens (input, output)\nconst REQUIRED = {\n  invoice: ['issuer', 'doc_number', 'doc_date', 'total'],\n  receipt: ['issuer', 'doc_number', 'doc_date', 'total'],\n  certificate: ['counterparty', 'issuer', 'policy_number', 'expiry_date'],\n};\n\nconst blank = (v) => v === null || v === undefined || (typeof v === 'string' && v.trim() === '');\nconst num = (v) => (blank(v) ? null : Number(v));\nconst normKey = (t) => String(t).toLowerCase().replace(/[^a-z0-9]/g, '');\n\nfunction parseDate(v) {\n  if (blank(v)) return null;\n  const s = String(v).trim();\n  const m = /^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(s);\n  if (!m) return 'invalid';\n  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));\n  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3] ? s : 'invalid';\n}\n\nfunction checkDocument(doc, today) {\n  const flags = new Set();\n  const type = String(doc.doc_type || '').toLowerCase();\n  for (const field of REQUIRED[type] || REQUIRED.invoice) if (blank(doc[field])) flags.add('missing_required_field');\n\n  const dates = {};\n  for (const field of ['doc_date', 'due_date', 'effective_date', 'expiry_date']) {\n    dates[field] = parseDate(doc[field]);\n    if (dates[field] === 'invalid') flags.add('invalid_date');\n  }\n  const ok = (d) => d && d !== 'invalid';\n  if (type === 'invoice' && ok(dates.doc_date) && ok(dates.due_date) && dates.due_date < dates.doc_date) flags.add('due_before_invoice');\n  if (type === 'certificate' && ok(dates.expiry_date) && dates.expiry_date < today) flags.add('certificate_expired');\n\n  const lines = doc.lines || [];\n  for (const line of lines) {\n    const q = num(line.quantity), p = num(line.unit_price), a = num(line.amount);\n    if (q !== null && p !== null && a !== null && Math.abs(q * p - a) > MONEY_TOLERANCE) flags.add('line_math');\n  }\n  const subtotal = num(doc.subtotal), tax = num(doc.tax_amount), rate = num(doc.tax_rate_percent), total = num(doc.total);\n  const amounts = lines.map((l) => num(l.amount));\n  if (lines.length && subtotal !== null && !amounts.includes(null)\n      && Math.abs(amounts.reduce((s, a) => s + a, 0) - subtotal) > MONEY_TOLERANCE) flags.add('lines_sum_to_subtotal');\n  // sellers that round tax to whole units (common for rupees) can be up to 0.5 off\n  const taxTolerance = tax !== null && Number.isInteger(tax) ? 0.5 + MONEY_TOLERANCE : MONEY_TOLERANCE;\n  if (rate !== null && tax !== null && subtotal !== null && Math.abs((subtotal * rate) / 100 - tax) > taxTolerance) flags.add('tax_matches_rate');\n  if (subtotal !== null && total !== null && Math.abs(subtotal + (tax || 0) - total) > MONEY_TOLERANCE) flags.add('total_equals_subtotal_plus_tax');\n  return flags;\n}\n\nfunction costUsd(model, usage) {\n  const key = Object.keys(PRICES_PER_MTOK).find((p) => String(model || '').startsWith(p));\n  if (!key || usage.input_tokens === undefined) return '';\n  const [pin, pout] = PRICES_PER_MTOK[key];\n  return Math.round(((usage.input_tokens * pin + usage.output_tokens * pout) / 1e6) * 1e6) / 1e6;\n}\n\nfunction parseReply(reply) {\n  if (reply.error) {\n    const e = reply.error;\n    throw new Error(typeof e === 'string' ? e : e.message || JSON.stringify(e));\n  }\n  if (reply.stop_reason !== 'end_turn') throw new Error(`stopped early (stop_reason=${reply.stop_reason})`);\n  const text = (reply.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');\n  return JSON.parse(text);\n}\n\nconst requests = $('Build Claude requests').all();\nconst replies = $input.all();\nif (requests.length !== replies.length) throw new Error(`${requests.length} requests but ${replies.length} replies`);\nconst today = $now.toFormat('yyyy-MM-dd');\nconst seen = new Map();\nconst out = [];\n\nfor (let i = 0; i < replies.length; i++) {\n  const file = requests[i].json.file;\n  const reply = replies[i].json || {};\n  const usage = reply.usage || {};\n  const log = { file, model: reply.model || '', input_tokens: usage.input_tokens ?? '', output_tokens: usage.output_tokens ?? '',\n    cost_usd: costUsd(reply.model, usage), error: '' };\n  const row = Object.fromEntries(DOC_COLUMNS.map((c) => [c, '']));\n  row.file = file;\n\n  let doc;\n  try {\n    doc = parseReply(reply);\n  } catch (err) {\n    log.error = String(err.message || err);\n    row.status = 'Needs review';\n    row.flags = 'extraction_failed';\n    out.push({ json: { row, lines: [], log } });\n    continue;\n  }\n\n  const flags = checkDocument(doc, today);\n  if (!blank(doc.issuer) && !blank(doc.doc_number)) {\n    const key = `${normKey(doc.issuer)}|${normKey(doc.doc_number)}`;\n    if (seen.has(key)) flags.add('duplicate_document');\n    else seen.set(key, file);\n  }\n\n  for (const c of DOC_COLUMNS.slice(1, -2)) row[c] = doc[c] === null || doc[c] === undefined ? '' : doc[c];\n  row.doc_type = String(doc.doc_type || '').toLowerCase();\n  row.status = flags.size ? 'Needs review' : 'OK';\n  row.flags = [...flags].join('; ');\n  const lines = (doc.lines || []).map((l, k) => ({ file, line_no: k + 1, description: l.description ?? '',\n    quantity: l.quantity ?? '', unit_price: l.unit_price ?? '', amount: l.amount ?? '' }));\n  out.push({ json: { row, lines, log } });\n}\nreturn out;\n"
+        "jsCode": "// Code node \"Checks and rows\" (run once for all items).\n// Reads Claude's replies, runs the checks on every document and builds the sheet rows.\n// Input: every reply from \"Claude: extract fields\", collected by the loop in the same order as \"Build Claude requests\".\n// Output: one item per document with { row, lines, log }.\n\nconst DOC_COLUMNS = ['file', 'doc_type', 'issuer', 'doc_number', 'doc_date', 'due_date', 'effective_date', 'expiry_date',\n  'currency', 'counterparty', 'policy_number', 'coverage_limit', 'subtotal', 'tax_rate_percent', 'tax_amount', 'total',\n  'status', 'flags'];\nconst MONEY_TOLERANCE = 0.011; // amounts are printed to 2 decimals\nconst PRICES_PER_MTOK = { 'claude-haiku-4-5': [1.0, 5.0] }; // USD per million tokens (input, output)\nconst REQUIRED = {\n  invoice: ['issuer', 'doc_number', 'doc_date', 'total'],\n  receipt: ['issuer', 'doc_number', 'doc_date', 'total'],\n  certificate: ['counterparty', 'issuer', 'policy_number', 'expiry_date'],\n};\n\nconst blank = (v) => v === null || v === undefined || (typeof v === 'string' && v.trim() === '');\nconst num = (v) => (blank(v) ? null : Number(v));\nconst normKey = (t) => String(t).toLowerCase().replace(/[^a-z0-9]/g, '');\n\nfunction parseDate(v) {\n  if (blank(v)) return null;\n  const s = String(v).trim();\n  const m = /^(\\d{4})-(\\d{2})-(\\d{2})$/.exec(s);\n  if (!m) return 'invalid';\n  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));\n  return d.getUTCFullYear() === +m[1] && d.getUTCMonth() === +m[2] - 1 && d.getUTCDate() === +m[3] ? s : 'invalid';\n}\n\nfunction checkDocument(doc, today) {\n  const flags = new Set();\n  const type = String(doc.doc_type || '').toLowerCase();\n  for (const field of REQUIRED[type] || REQUIRED.invoice) if (blank(doc[field])) flags.add('missing_required_field');\n\n  const dates = {};\n  for (const field of ['doc_date', 'due_date', 'effective_date', 'expiry_date']) {\n    dates[field] = parseDate(doc[field]);\n    if (dates[field] === 'invalid') flags.add('invalid_date');\n  }\n  const ok = (d) => d && d !== 'invalid';\n  if (type === 'invoice' && ok(dates.doc_date) && ok(dates.due_date) && dates.due_date < dates.doc_date) flags.add('due_before_invoice');\n  if (type === 'certificate' && ok(dates.expiry_date) && dates.expiry_date < today) flags.add('certificate_expired');\n\n  const lines = doc.lines || [];\n  for (const line of lines) {\n    const q = num(line.quantity), p = num(line.unit_price), a = num(line.amount);\n    if (q !== null && p !== null && a !== null && Math.abs(q * p - a) > MONEY_TOLERANCE) flags.add('line_math');\n  }\n  const subtotal = num(doc.subtotal), tax = num(doc.tax_amount), rate = num(doc.tax_rate_percent), total = num(doc.total);\n  const amounts = lines.map((l) => num(l.amount));\n  if (lines.length && subtotal !== null && !amounts.includes(null)\n      && Math.abs(amounts.reduce((s, a) => s + a, 0) - subtotal) > MONEY_TOLERANCE) flags.add('lines_sum_to_subtotal');\n  // sellers that round tax to whole units (common for rupees) can be up to 0.5 off\n  const taxTolerance = tax !== null && Number.isInteger(tax) ? 0.5 + MONEY_TOLERANCE : MONEY_TOLERANCE;\n  if (rate !== null && tax !== null && subtotal !== null && Math.abs((subtotal * rate) / 100 - tax) > taxTolerance) flags.add('tax_matches_rate');\n  if (subtotal !== null && total !== null && Math.abs(subtotal + (tax || 0) - total) > MONEY_TOLERANCE) flags.add('total_equals_subtotal_plus_tax');\n  return flags;\n}\n\nfunction costUsd(model, usage) {\n  const key = Object.keys(PRICES_PER_MTOK).find((p) => String(model || '').startsWith(p));\n  if (!key || usage.input_tokens === undefined) return '';\n  const [pin, pout] = PRICES_PER_MTOK[key];\n  return Math.round(((usage.input_tokens * pin + usage.output_tokens * pout) / 1e6) * 1e6) / 1e6;\n}\n\nfunction parseReply(reply) {\n  if (reply.error) {\n    const e = reply.error;\n    throw new Error(typeof e === 'string' ? e : e.message || JSON.stringify(e));\n  }\n  if (reply.stop_reason !== 'end_turn') throw new Error(`stopped early (stop_reason=${reply.stop_reason})`);\n  const text = (reply.content || []).filter((b) => b.type === 'text').map((b) => b.text).join('');\n  return JSON.parse(text);\n}\n\nconst requests = $('Build Claude requests').all();\nconst replies = $input.all();\nif (requests.length !== replies.length) throw new Error(`${requests.length} requests but ${replies.length} replies`);\nconst today = $now.toFormat('yyyy-MM-dd');\nconst seen = new Map();\nconst out = [];\n\nfor (let i = 0; i < replies.length; i++) {\n  const file = requests[i].json.file;\n  const reply = replies[i].json || {};\n  const usage = reply.usage || {};\n  const log = { file, model: reply.model || '', input_tokens: usage.input_tokens ?? '', output_tokens: usage.output_tokens ?? '',\n    cost_usd: costUsd(reply.model, usage), error: '' };\n  const row = Object.fromEntries(DOC_COLUMNS.map((c) => [c, '']));\n  row.file = file;\n\n  let doc;\n  try {\n    doc = parseReply(reply);\n  } catch (err) {\n    log.error = String(err.message || err);\n    row.status = 'Needs review';\n    row.flags = 'extraction_failed';\n    out.push({ json: { row, lines: [], log } });\n    continue;\n  }\n\n  const flags = checkDocument(doc, today);\n  if (!blank(doc.issuer) && !blank(doc.doc_number)) {\n    const key = `${normKey(doc.issuer)}|${normKey(doc.doc_number)}`;\n    if (seen.has(key)) flags.add('duplicate_document');\n    else seen.set(key, file);\n  }\n\n  for (const c of DOC_COLUMNS.slice(1, -2)) row[c] = doc[c] === null || doc[c] === undefined ? '' : doc[c];\n  row.doc_type = String(doc.doc_type || '').toLowerCase();\n  row.status = flags.size ? 'Needs review' : 'OK';\n  row.flags = [...flags].join('; ');\n  const lines = (doc.lines || []).map((l, k) => ({ file, line_no: k + 1, description: l.description ?? '',\n    quantity: l.quantity ?? '', unit_price: l.unit_price ?? '', amount: l.amount ?? '' }));\n  out.push({ json: { row, lines, log } });\n}\nreturn out;\n"
       }
     },
     {
@@ -96,7 +107,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
+        1320,
         120
       ],
       "parameters": {
@@ -109,7 +120,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1320,
+        1540,
         120
       ],
       "parameters": {
@@ -125,7 +136,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        1540,
+        1760,
         120
       ],
       "parameters": {
@@ -141,7 +152,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
+        1320,
         300
       ],
       "parameters": {
@@ -154,7 +165,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1320,
+        1540,
         300
       ],
       "parameters": {
@@ -170,7 +181,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        1540,
+        1760,
         300
       ],
       "parameters": {
@@ -186,7 +197,7 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1100,
+        1320,
         480
       ],
       "parameters": {
@@ -199,7 +210,7 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        1320,
+        1540,
         480
       ],
       "parameters": {
@@ -215,7 +226,7 @@
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1.1,
       "position": [
-        1540,
+        1760,
         480
       ],
       "parameters": {
@@ -253,6 +264,24 @@
       "main": [
         [
           {
+            "node": "One document at a time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "One document at a time": {
+      "main": [
+        [
+          {
+            "node": "Checks and rows",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
             "node": "Claude: extract fields",
             "type": "main",
             "index": 0
@@ -264,7 +293,7 @@
       "main": [
         [
           {
-            "node": "Checks and rows",
+            "node": "One document at a time",
             "type": "main",
             "index": 0
           }

@@ -1,6 +1,6 @@
 // Code node "Checks and rows" (run once for all items).
 // Reads Claude's replies, runs the checks on every document and builds the sheet rows.
-// Input: the replies from "Claude: extract fields", in the same order as "Build Claude requests".
+// Input: every reply from "Claude: extract fields", collected by the loop in the same order as "Build Claude requests".
 // Output: one item per document with { row, lines, log }.
 
 const DOC_COLUMNS = ['file', 'doc_type', 'issuer', 'doc_number', 'doc_date', 'due_date', 'effective_date', 'expiry_date',
