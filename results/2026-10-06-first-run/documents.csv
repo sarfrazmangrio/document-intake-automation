@@ -1,0 +1,8 @@
+﻿file,doc_type,issuer,doc_number,doc_date,due_date,effective_date,expiry_date,currency,counterparty,policy_number,coverage_limit,subtotal,tax_rate_percent,tax_amount,total,status,flags
+C-02.pdf,certificate,Northstar Mutual Insurance Co.,NM-COI-2025-0977,2025-08-20,,2025-09-01,2026-08-31,USD,Kestrel Packaging Ltd.,GL-66120873,500000,,,,,Needs review,certificate_expired
+INV-01.pdf,invoice,Orchid Office Supply Co.,OOS-2026-0412,2026-02-17,2026-03-19,,,USD,Brightside Dental Group,,,402.28,8.25,33.19,435.47,OK,
+INV-02.pdf,invoice,KESTREL PACKAGING LTD.,KPL/INV/1187,2026-02-13,2026-02-28,,,PKR,Meridian Retail (Pvt.) Ltd.,,,157500,18,28350,185850,OK,
+INV-10.pdf,invoice,KESTREL PACKAGING LTD.,KPL/INV/1190,2026-03-18,2026-04-17,,,PKR,Atlas Garments,,,76950,18,13851,90801,OK,
+R-02.pdf,receipt,JUNIPER LANE CAFE,4817,2026-10-03,,,,USD,,,,19.2,8.25,1.58,20.78,OK,
+R-03.jpg,receipt,BRIGHT BASKET GROCERS,BB-104251,2026-10-06,,,,PKR,,,,2715,18,488.7,3203.7,OK,
+R-06.pdf,receipt,BRIGHT BASKET GROCERS,BB-104260,2026-10-06,,,,PKR,,,,2120,18,381.6,2601.6,Needs review,total_equals_subtotal_plus_tax

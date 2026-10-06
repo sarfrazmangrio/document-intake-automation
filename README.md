@@ -85,7 +85,10 @@ A call that fails becomes a Needs review row flagged `extraction_failed`, and th
 
 The API key lives in an n8n credential (Header Auth, name `x-api-key`), never in the workflow file.
 
-Status: the whole flow has run in n8n 2.42.3 against a stand-in for the Claude API that returns the expected answers (30 of 30 documents passed), which tests everything except Claude's reading. Results with the real API come next.
+Status:
+- Against a stand-in for the Claude API that returns the expected answers, the whole flow ran in n8n 2.42.3 and 30 of 30 documents passed. This tests everything except Claude's reading.
+- First run with the real API (6 Oct, 7 of the 30 documents, including a scan, a phone photo and 2 planted problems): 7 of 7 passed, 105 of 105 fields and 23 of 23 line items correct, both problems flagged with no false alarms, USD 0.0315 in all. Details in [results/2026-10-06-first-run](results/2026-10-06-first-run/).
+- Next: the other 23 documents.
 
 ## Built with
 
