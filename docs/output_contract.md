@@ -44,3 +44,10 @@ Formats:
 | `total_equals_subtotal_plus_tax` | The total doesn't equal subtotal plus tax |
 | `duplicate_document` | Same issuer and number as an earlier document |
 | `certificate_expired` | The policy expiry date has passed |
+| `extraction_failed` | The Claude call failed or its reply couldn't be read; the error is in the run log. Not one of the planted problems |
+
+## Run log (one row per document)
+
+`file, model, input_tokens, output_tokens, cost_usd, error`
+
+Cost uses Claude Haiku 4.5's list price: USD 1 per million input tokens and USD 5 per million output tokens.

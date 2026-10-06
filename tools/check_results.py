@@ -2,7 +2,9 @@
 
 Export the sheet's "Documents" tab (and, if you want line items scored too, the "Lines" tab) as CSV, then run:
 
-    python tools/check_results.py --documents documents.csv [--lines lines.csv] [--report report.md]
+    python tools/check_results.py --documents documents.csv [--lines lines.csv] [--report report.md] [--only-present]
+
+--only-present scores just the documents that are in the sheet, for a run on part of the test set.
 
 A document passes when every field matches, its flags match the planted problems exactly,
 and its status is right ("Needs review" when it has a flag, "OK" when it has none).
@@ -202,10 +204,16 @@ def main(argv=None) -> int:
     ap.add_argument("--lines", type=Path, help="CSV export of the Lines tab (optional)")
     ap.add_argument("--expected", type=Path, default=DEFAULT_EXPECTED)
     ap.add_argument("--report", type=Path, help="also write the result as a Markdown file")
+    ap.add_argument("--only-present", action="store_true",
+                    help="score only the documents that appear in the sheet (for a run on part of the test set)")
     args = ap.parse_args(argv)
 
     expected = load_expected(args.expected)
-    scored = score(expected, read_csv(args.documents), read_csv(args.lines) if args.lines else None)
+    doc_rows = read_csv(args.documents)
+    if args.only_present:
+        present = {row.get("file", "").strip() for row in doc_rows}
+        expected = {**expected, "documents": [d for d in expected["documents"] if d["file"] in present]}
+    scored = score(expected, doc_rows, read_csv(args.lines) if args.lines else None)
     lines = summary_lines(scored, with_lines=bool(args.lines))
     print("\n".join(lines))
     if args.report:

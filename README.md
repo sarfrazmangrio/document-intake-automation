@@ -57,9 +57,9 @@ It prints:
 - line items correct;
 - every mismatch.
 
-The exit code is 0 only when all 30 documents pass. The column layout is in [docs/output_contract.md](docs/output_contract.md); `docs/example_documents.csv` shows what a perfect run writes.
+The exit code is 0 only when all 30 documents pass. The column layout is in [docs/output_contract.md](docs/output_contract.md); `docs/example_documents.csv` shows what a perfect run writes. To score a run on only some of the documents, add `--only-present`.
 
-Tests for the check itself: `python -m pytest -q`.
+Tests: `python -m pytest -q`. They cover the check itself, the workflow file and the workflow's checks code.
 
 ## Running n8n
 
@@ -71,6 +71,21 @@ n8n runs in Docker on the same computer. From the `n8n` folder, run `docker comp
 Tested with n8n 2.42.3 (Community Edition) on Docker Desktop 4.94 for Windows. On Windows, Docker Desktop also needs:
 - the Virtual Machine Platform Windows feature;
 - CPU virtualization (Intel VT-x or AMD-V) switched on in the BIOS/UEFI.
+
+## The workflow (core flow)
+
+`n8n/document_intake_core.json` is the workflow to import. It is assembled from the JavaScript in `n8n/src` by `python tools/build_workflow.py`, so edit the sources, not the JSON.
+
+1. Reads every PDF, JPG and PNG in `files/intake`.
+2. Sends each file to Claude (Haiku 4.5), one at a time, as a document or image block. Structured outputs make every reply follow one schema with the 15 fields in the output contract plus the line items. Anything not printed comes back empty.
+3. Runs the checks (required fields, dates, arithmetic, duplicates, expired certificates) and marks each document OK or Needs review.
+4. Writes `documents.csv`, `lines.csv` and `run_log.csv` (tokens, cost and any error per document) to `files/output`.
+
+A call that fails becomes a Needs review row flagged `extraction_failed`, and the error goes to the run log; the other documents carry on.
+
+The API key lives in an n8n credential (Header Auth, name `x-api-key`), never in the workflow file.
+
+Status: the whole flow has run in n8n 2.42.3 against a stand-in for the Claude API that returns the expected answers (30 of 30 documents passed), which tests everything except Claude's reading. Results with the real API come next.
 
 ## Built with
 
